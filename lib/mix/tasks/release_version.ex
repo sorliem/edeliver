@@ -178,6 +178,7 @@ defmodule Mix.Tasks.Release.Version do
     args = sort_args_append_metadata_last(args, [], [])
     known_options = update_version_options ++ append_metadata_options
     unknown_options = args -- known_options
+    IO.inspect unknown_options
     illegal_combinations = Enum.filter args, &(Enum.member?(update_version_options, &1))
     cond do
       args == ["show"] -> :show
