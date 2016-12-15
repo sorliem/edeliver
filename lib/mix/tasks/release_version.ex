@@ -159,7 +159,7 @@ defmodule Mix.Tasks.Release.Version do
   """
   @spec parse_args(OptionParser.argv) :: :show | {:error, message::String.t} | {:modify, [modification_fun]}
   def parse_args(args) do
-    append_metadata_options = ["commit_count", "commit_count_branch", "revision", "date", "branch", "branch_unless_master", "mix_env"]
+    append_metadata_options = ["commit_count", "commit_count_branch", "revision", "date", "branch", "branch_unless_master", "mix_env", "travis_build_number"]
     update_version_options  = ["major", "minor", "patch", "set"]
 
     args = normalize_args(args)
@@ -271,6 +271,7 @@ defmodule Mix.Tasks.Release.Version do
   def modify_version_revision({version, has_metadata}),            do: {add_metadata(version, __MODULE__.get_git_revision, has_metadata),        _has_metadata = true}
   def modify_version_date({version, has_metadata}),                do: {add_metadata(version, __MODULE__.get_date, has_metadata),                _has_metadata = true}
   def modify_version_branch({version, has_metadata}),              do: {add_metadata(version, __MODULE__.get_branch, has_metadata),              _has_metadata = true}
+  def modify_version_travis_build_number({version, has_metadata}), do: {add_metadata(version, __MODULE__.get_travis_build_number, has_metadata), _has_metadata = true}
   def modify_version_branch_unless_master({version, has_metadata}) do
     case __MODULE__.get_branch do
       "master"     -> {version, has_metadata}
@@ -362,6 +363,10 @@ defmodule Mix.Tasks.Release.Version do
   @spec get_revision() :: String.t
   defp get_revision() do
     System.cmd( "git", ["rev-parse", "HEAD"]) |> elem(0) |> String.rstrip
+  end
+
+  defp get_travis_build_number() do
+    System.get_env("TRAVIS_BUILD_NUMBER")
   end
 
   def valid_semver_metadata(nil), do: ""
