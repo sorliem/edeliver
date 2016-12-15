@@ -235,6 +235,7 @@ defmodule Mix.Tasks.Release.Version do
         "mix-env" -> "mix_env"
         "commit-count-branch" -> "commit_count_branch"
         "branch-unless-master" -> "branch_unless_master"
+        "travis-build-number" -> "travis_build_number"
         command -> command
       end
     end)
